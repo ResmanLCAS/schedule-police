@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
                 console.log("Received message:", payloadToProcess);
                 break;
             }
+            break;
 
         default:
             console.log("Unhandled event type:", payloadToProcess);
