@@ -38,21 +38,21 @@ export async function POST(request: NextRequest) {
         case "message":
             const text = payloadToProcess.message.text;
             if (text === "/help") {
-                replyMessage(payloadToProcess.replyToken, HelpMessage);
+                await replyMessage(payloadToProcess.replyToken, HelpMessage);
             } else if (text.startsWith("CONNECT_LINE_ID-")) {
-                HandleConnectRequest(payloadToProcess);
+                await HandleConnectRequest(payloadToProcess);
                 break;
             } else if (text === "/notifymessier") {
-                manualNotifyTeachingSchedule(payloadToProcess);
+                await manualNotifyTeachingSchedule(payloadToProcess);
                 break;
             } else if (text.startsWith("/checkmessier")) {
-                manualCheckTeachingSchedule(payloadToProcess);
+                await manualCheckTeachingSchedule(payloadToProcess);
             } else if (text.startsWith("/acceptpermission")) {
-                // manualCheckTeachingSchedule(payloadToProcess);
+                // await manualCheckTeachingSchedule(payloadToProcess);
             } else if (text.startsWith("/latepermission")) {
-                createPermission(payloadToProcess);
+                await createPermission(payloadToProcess);
             } else {
-                console.log("Received message:", payloadToProcess);
+                console.log("Received unknown message:", payloadToProcess);
                 break;
             }
             break;
