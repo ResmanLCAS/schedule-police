@@ -245,7 +245,7 @@ export async function manualNotifyTeachingSchedule(payloadToProcess: {
             payloadToProcess.replyToken,
             payloadToProcess.source.groupId ?? ""
         );
-
+    }
     // else
     //     await replyMessage(
     //         payloadToProcess.replyToken,
