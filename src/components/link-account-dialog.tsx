@@ -40,7 +40,7 @@ export function LinkAccountInstructions() {
                 <>
                     Click{" "}
                     <Link
-                        href="https://lin.ee/ogjG6al"
+                        href="https://lin.ee/1xNBI7x"
                         target="_blank"
                         className="text-blue-600 underline">
                         here
@@ -114,7 +114,7 @@ export function LinkAccountInstructions() {
             </div>
 
             <DialogFooter>
-                Consult with ResMan (JB/NB) if you have any questions.
+                Consult with ResMan (JB/NV) if you have any questions.
             </DialogFooter>
         </>
     );

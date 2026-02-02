@@ -266,13 +266,14 @@ export async function manualNotifyTeachingSchedule(payloadToProcess: {
             payloadToProcess.source.groupId ?? ""
         );
         console.log("[manualNotifyTeachingSchedule] notifyTeachingSchedule completed");
-    } else {
-        console.log("[manualNotifyTeachingSchedule] User is not ADMIN or not found");
-        await replyMessage(
-            payloadToProcess.replyToken,
-            "You do not have permission to use this command."
-        );
-    }
+    } 
+    // else {
+    //     console.log("[manualNotifyTeachingSchedule] User is not ADMIN or not found");
+    //     await replyMessage(
+    //         payloadToProcess.replyToken,
+    //         "You do not have permission to use this command."
+    //     );
+    // }
     return;
 }
 
