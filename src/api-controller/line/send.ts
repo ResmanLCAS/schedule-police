@@ -141,6 +141,7 @@ export async function sendTeachingAttendanceByReply(
 }
 
 export function replyMessage(replyToken: string, message: string) {
+    console.log("Replying message:", message);
     lineMessagingApiClient.replyMessage({
         replyToken: replyToken,
         messages: [

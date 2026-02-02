@@ -134,12 +134,17 @@ async function notifyByReply(
     groupId: string,
     nonPresentLecturersByRegion: RegionMap
 ) {
-    console.log(nonPresentLecturersByRegion);
+    console.log("[notifyByReply] Called with groupId:", groupId);
+    console.log("[notifyByReply] nonPresentLecturersByRegion:", nonPresentLecturersByRegion);
+    
     const region =
         await sql`SELECT region FROM active_regions WHERE remind_group_line_id = ${groupId}`;
+    
+    console.log("[notifyByReply] Region query result:", region);
+    
     if (region.length === 0) {
-        console.error(`No region found for group ID: ${groupId}`);
-        replyMessage(
+        console.error(`[notifyByReply] No region found for group ID: ${groupId}`);
+        await replyMessage(
             replyToken,
             `This group isn't registered as a reminder group.`
         );
@@ -150,19 +155,27 @@ async function notifyByReply(
     }
 
     const nonPresentLecturers = nonPresentLecturersByRegion[region[0].region];
+    console.log("[notifyByReply] Region:", region[0].region);
+    console.log("[notifyByReply] Non-present lecturers count:", nonPresentLecturers?.length ?? 0);
+    
     if (!nonPresentLecturers || nonPresentLecturers.length === 0) {
-        console.log(`All ${region[0].region} lecturers are present.`);
-        replyMessage(replyToken, `All lecturers are present.`);
+        console.log(`[notifyByReply] All ${region[0].region} lecturers are present.`);
+        await replyMessage(replyToken, `All lecturers are present.`);
         return;
     }
 
     const messages = await getNotificationMessages(nonPresentLecturers);
+    console.log("[notifyByReply] Generated messages count:", messages.length);
 
     if (messages.length === 0) {
-        replyMessage(replyToken, `All lecturers are present.`);
+        console.log("[notifyByReply] No messages to send, all present");
+        await replyMessage(replyToken, `All lecturers are present.`);
+        return;
     }
 
+    console.log("[notifyByReply] Sending teaching reminder to group");
     await sendTeachingReminderToGroup(messages, groupId, replyToken);
+    console.log("[notifyByReply] Reminder sent successfully");
 }
 
 export async function notifyTeachingSchedule(
@@ -189,12 +202,13 @@ export async function notifyTeachingSchedule(
         const attendanceData = await getAttendanceData();
 
         if (attendanceData.attendance.length === 0) {
-            console.log("No attendance data found for current shift.");
-            if (replyToken)
-                replyMessage(
+            console.log("[notifyTeachingSchedule] No attendance data found for current shift.");
+            if (replyToken) {
+                await replyMessage(
                     replyToken,
                     "No attendance data found for current shift."
                 );
+            }
             return { success: true, message: "No attendance data found." };
         }
 
@@ -236,21 +250,29 @@ export async function manualNotifyTeachingSchedule(payloadToProcess: {
     replyToken: string;
     source: { userId: string; groupId?: string };
 }): Promise<void> {
+    console.log("[manualNotifyTeachingSchedule] Called with userId:", payloadToProcess.source.userId);
+    console.log("[manualNotifyTeachingSchedule] GroupId:", payloadToProcess.source.groupId);
+    
     const check =
         await sql`SELECT role FROM assistants WHERE line_id = ${payloadToProcess.source.userId}`;
 
+    console.log("[manualNotifyTeachingSchedule] Database check result:", check);
+
     if (check.length !== 0 && check[0].role === "ADMIN") {
+        console.log("[manualNotifyTeachingSchedule] User is ADMIN, calling notifyTeachingSchedule");
         await notifyTeachingSchedule(
             "reply",
             payloadToProcess.replyToken,
             payloadToProcess.source.groupId ?? ""
         );
+        console.log("[manualNotifyTeachingSchedule] notifyTeachingSchedule completed");
+    } else {
+        console.log("[manualNotifyTeachingSchedule] User is not ADMIN or not found");
+        await replyMessage(
+            payloadToProcess.replyToken,
+            "You do not have permission to use this command."
+        );
     }
-    // else
-    //     await replyMessage(
-    //         payloadToProcess.replyToken,
-    //         "You do not have permission to use this command."
-    //     );
     return;
 }
 
