@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
 
     const payloadToProcess = rawPayload.events[0];
 
-    console.log(payloadToProcess);
+    console.log(payloadToProcess)
 
     if (!payloadToProcess) {
         return successResponse("Message received.", null);

@@ -37,7 +37,7 @@ async function getCurrentShift(nowDate: Date): Promise<ShiftWithDate | null> {
     }));
 
     const futureShifts = shiftsWithDate.filter(
-        (s) => s.startDate.getTime() > nowDate.getTime()
+        (s) => s.startDate.getTime() > nowDate.getTime() && s.startDate.getHours() % 2 == 1
     );
 
     if (futureShifts.length === 0) return null;
