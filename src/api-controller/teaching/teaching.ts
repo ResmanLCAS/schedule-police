@@ -294,7 +294,7 @@ export async function manualCheckTeachingSchedule(payloadToProcess: {
             attendanceRawData.attendance = filteredAttendance;
         }
 
-        sendTeachingAttendanceByReply(
+        await sendTeachingAttendanceByReply(
             payloadToProcess.replyToken,
             attendanceRawData.attendance,
             attendanceRawData.shift,

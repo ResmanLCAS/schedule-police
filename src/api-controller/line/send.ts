@@ -98,7 +98,7 @@ export async function sendTeachingAttendanceByReply(
     }\nCurrent Shift: ${shift?.Start ?? "N/A"} - ${shift?.End ?? "N/A"}\n\n`;
 
     if (attendanceData.length === 0) {
-        lineMessagingApiClient.replyMessage({
+        await lineMessagingApiClient.replyMessage({
             replyToken: replyToken,
             messages: [
                 {
@@ -129,7 +129,7 @@ export async function sendTeachingAttendanceByReply(
 
     const fullText = prefixText + messages.join("\n");
 
-    lineMessagingApiClient.replyMessage({
+    await lineMessagingApiClient.replyMessage({
         replyToken: replyToken,
         messages: [
             {
@@ -140,15 +140,21 @@ export async function sendTeachingAttendanceByReply(
     });
 }
 
-export function replyMessage(replyToken: string, message: string) {
-    console.log("Replying message:", message);
-    lineMessagingApiClient.replyMessage({
-        replyToken: replyToken,
-        messages: [
-            {
-                type: "text",
-                text: message,
-            } as Message,
-        ],
-    });
+export async function replyMessage(replyToken: string, message: string) {
+    console.log("[replyMessage] Replying message:", message);
+    try {
+        await lineMessagingApiClient.replyMessage({
+            replyToken: replyToken,
+            messages: [
+                {
+                    type: "text",
+                    text: message,
+                } as Message,
+            ],
+        });
+        console.log("[replyMessage] Message sent successfully");
+    } catch (error) {
+        console.error("[replyMessage] Failed to send reply:", error);
+        throw error;
+    }
 }
