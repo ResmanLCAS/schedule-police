@@ -239,8 +239,8 @@ export async function manualNotifyTeachingSchedule(payloadToProcess: {
     const check =
         await sql`SELECT role FROM assistants WHERE line_id = ${payloadToProcess.source.userId}`;
 
-    if (check.length !== 0 && check[0].role === "ADMIN")
-        notifyTeachingSchedule(
+    if (check.length !== 0 && check[0].role === "ADMIN") {
+        await notifyTeachingSchedule(
             "reply",
             payloadToProcess.replyToken,
             payloadToProcess.source.groupId ?? ""
