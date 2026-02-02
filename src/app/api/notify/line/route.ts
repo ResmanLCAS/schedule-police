@@ -8,6 +8,7 @@ import {
 } from "@/api-controller/teaching/teaching";
 import { createPermission } from "@/api-controller/permission/permission";
 import { replyMessage } from "@/api-controller/line/send";
+import { sign } from "crypto";
 
 const HelpMessage = `Available Commands:
 
@@ -18,6 +19,7 @@ const HelpMessage = `Available Commands:
 To connect your line account, visit https://schedule-police.vercel.app and follow the instructions.`;
 
 export async function POST(request: NextRequest) {
+    console.log("Hit");
     const body = await request.text();
     const signature = request.headers.get("x-line-signature");
 
@@ -26,9 +28,13 @@ export async function POST(request: NextRequest) {
         return errorResponse("Invalid signature", 401);
     }
 
+    console.log("Signature");
+
     const rawPayload = JSON.parse(body);
 
     const payloadToProcess = rawPayload.events[0];
+
+    console.log(payloadToProcess);
 
     if (!payloadToProcess) {
         return successResponse("Message received.", null);
