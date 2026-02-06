@@ -63,12 +63,12 @@ export async function sendTeachingReminderToGroup(
         };
 
         if (replyToken) {
-            await lineMessagingApiClient.replyMessage({
+            lineMessagingApiClient.replyMessage({
                 replyToken: replyToken,
                 messages: [lineMessage],
             });
         } else {
-            await lineMessagingApiClient.pushMessage({
+            lineMessagingApiClient.pushMessage({
                 to: groupLineId,
                 messages: [lineMessage],
             });
@@ -98,7 +98,7 @@ export async function sendTeachingAttendanceByReply(
     }\nCurrent Shift: ${shift?.Start ?? "N/A"} - ${shift?.End ?? "N/A"}\n\n`;
 
     if (attendanceData.length === 0) {
-        await lineMessagingApiClient.replyMessage({
+        lineMessagingApiClient.replyMessage({
             replyToken: replyToken,
             messages: [
                 {
@@ -129,7 +129,7 @@ export async function sendTeachingAttendanceByReply(
 
     const fullText = prefixText + messages.join("\n");
 
-    await lineMessagingApiClient.replyMessage({
+    lineMessagingApiClient.replyMessage({
         replyToken: replyToken,
         messages: [
             {
@@ -143,7 +143,7 @@ export async function sendTeachingAttendanceByReply(
 export async function replyMessage(replyToken: string, message: string) {
     console.log("[replyMessage] Replying message:", message);
     try {
-        await lineMessagingApiClient.replyMessage({
+        lineMessagingApiClient.replyMessage({
             replyToken: replyToken,
             messages: [
                 {
