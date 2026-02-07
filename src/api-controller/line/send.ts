@@ -16,6 +16,11 @@ export async function sendTeachingReminderToGroup(
     groupLineId: string,
     replyToken: string | null = null
 ): Promise<StandardResponse<void>> {
+    console.log("[sendTeachingReminderToGroup] Preparing reminder payload", {
+        messageCount: messages.length,
+        groupLineId,
+        hasReplyToken: Boolean(replyToken),
+    });
     try {
         const prefixText =
             "Dear all mentioned assistants, this is a reminder to re-login onto messier and scan BinusMaya Attendance QR Code.\n\n";
@@ -63,16 +68,30 @@ export async function sendTeachingReminderToGroup(
         };
 
         if (replyToken) {
+            console.log("[sendTeachingReminderToGroup] Sending reminder via reply", {
+                groupLineId,
+                messageCount: messages.length,
+                mentionCount: Object.keys(substitutionObjects).length,
+            });
             lineMessagingApiClient.replyMessage({
                 replyToken: replyToken,
                 messages: [lineMessage],
             });
         } else {
+            console.log("[sendTeachingReminderToGroup] Sending reminder via push", {
+                groupLineId,
+                messageCount: messages.length,
+                mentionCount: Object.keys(substitutionObjects).length,
+            });
             lineMessagingApiClient.pushMessage({
                 to: groupLineId,
                 messages: [lineMessage],
             });
         }
+        console.log("[sendTeachingReminderToGroup] Reminder send triggered", {
+            groupLineId,
+            messageCount: messages.length,
+        });
         return {
             success: true,
             message: "Group message sent successfully.",
